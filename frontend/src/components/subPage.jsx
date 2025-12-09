@@ -1,7 +1,7 @@
 'use client'
-// import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Sitemap from '../components/Sitemap';

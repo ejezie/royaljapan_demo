@@ -1,7 +1,7 @@
 'use client'
 // import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import {loadStripe} from "@stripe/stripe-js/pure";
+import {loadStripe} from "@stripe/stripe-js";
 const stripePromise = loadStripe('pk_test_51PvaMkKQfMI1g1n87ugCQsYOo89kYseL4FdkLHSaajuNu1nCrcSJJE0nWoxEDkbQp3wo8m8meUn0NlIfbhUv07YG00Lp2SEk4U');
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
