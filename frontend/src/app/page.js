@@ -1,14 +1,14 @@
 "use client";
-import Image from "next/image";
-import styles from "./page.module.css";
-
-// import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Sitemap from "@/components/Sitemap";
+import ProductCard from "@/components/ProductCard";
+import ProductSkeleton from "@/components/ProductSkeleton";
 import { useParams } from "next/navigation";
+import Image from "next/image";
+
 // const baseurl = import.meta.env.REACT_APP_API_BASE_URL;
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -18,26 +18,43 @@ function TopPage() {
   useEffect(() => {
     localStorage.setItem("userID", id);
   }, [id]);
+
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     getUserData(id);
-  }, []);
+  }, [id]);
 
   const getUserData = (id) => {
+    setLoading(true);
+    setError(null);
     let config = {
       method: "get",
-      url: `${baseurl}/api/user-products/${id}`,
+      url: `${baseurl}/api`,
     };
     axios(config)
       .then(async (response) => {
         setProducts(response.data.products);
+        setLoading(false);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        setLoading(false);
+        setError(
+          "Failed to load products. Please check your connection or try again later."
+        );
+        console.error("Error fetching products:", err);
+      });
   };
+
+  console.log(products, "products");
+
+
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div className="product">
         <section className="top">
           <div className="top-img">
@@ -120,28 +137,38 @@ function TopPage() {
         <section className="list">
           <div className="list-title">全ての商品</div>
           <div className="contain">
-            {products.map((item, index) => (
-              <div className="list-item" key={index}>
-                <div className="list-item-thumb">
-                  <Image width={300} height={300} src={item.image} alt="" />
-                </div>
-                <h3 className="list-item-title">{item.title}</h3>
-                <div className="list-item-package">{item.package}</div>
-                <p className="list-item-content">{item.description}</p>
-                <div className="list-item-price">
-                  <div className="wrap">
-                    <div className="list-item-price-title">特別限定価格</div>
-                    <p>
-                      {parseInt(item.price_sell)
-                        .toLocaleString("en-US")
-                        .toString()}{" "}
-                      <span>(税込)</span>
-                    </p>
-                  </div>
-                  <a href={`/products/${id}/${item.id}`}>今すぐ購入する</a>
-                </div>
+            {loading ? (
+              // Show skeletons while loading
+              Array.from({ length: 6 }).map((_, index) => (
+                <ProductSkeleton key={index} />
+              ))
+            ) : error ? (
+              // Show error message
+              <div className="w-full text-center py-20">
+                <p className="text-red-600 text-xl font-bold mb-4">{error}</p>
+                <button
+                  onClick={() => getUserData(id)}
+                  className="px-6 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition"
+                >
+                  Retry
+                </button>
               </div>
-            ))}
+            ) : products?.length > 0 ? (
+              // Show products
+              products.map((item, index) => (
+                <ProductCard
+                  key={index}
+                  product={item}
+                  index={index}
+                  userId={id}
+                />
+              ))
+            ) : (
+              // Empty state (optional)
+              <div className="w-full text-center py-20 text-gray-500">
+                No products found.
+              </div>
+            )}
           </div>
         </section>
         <section className="social">
@@ -241,94 +268,94 @@ function TopPage() {
 }
 export default TopPage;
 // export default function Home() {
-//   return (
-//     <div className={styles.page}>
-//       <main className={styles.main}>
-//         <Image
-//           className={styles.logo}
-//           src="/next.svg"
-//           alt="Next.js logo"
-//           width={180}
-//           height={38}
-//           priority
-//         />
-//         <ol>
-//           <li>
-//             Get started by editing <code>src/app/page.js</code>.
-//           </li>
-//           <li>Save and see your changes instantly.</li>
-//         </ol>
+// return (
+// <div className={styles.page}>
+// <main className={styles.main}>
+// <Image
+// className={styles.logo}
+// src="/next.svg"
+// alt="Next.js logo"
+// width={180}
+// height={38}
+// priority
+// />
+// <ol>
+// <li>
+// Get started by editing <code>src/app/page.js</code>.
+// </li>
+// <li>Save and see your changes instantly.</li>
+// </ol>
 //
-//         <div className={styles.ctas}>
-//           <a
-//             className={styles.primary}
-//             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-//             target="_blank"
-//             rel="noopener noreferrer"
-//           >
-//             <Image
-//               className={styles.logo}
-//               src="/vercel.svg"
-//               alt="Vercel logomark"
-//               width={20}
-//               height={20}
-//             />
-//             Deploy now
-//           </a>
-//           <a
-//             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-//             target="_blank"
-//             rel="noopener noreferrer"
-//             className={styles.secondary}
-//           >
-//             Read our docs
-//           </a>
-//         </div>
-//       </main>
-//       <footer className={styles.footer}>
-//         <a
-//           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           <Image
-//             aria-hidden
-//             src="/file.svg"
-//             alt="File icon"
-//             width={16}
-//             height={16}
-//           />
-//           Learn
-//         </a>
-//         <a
-//           href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           <Image
-//             aria-hidden
-//             src="/window.svg"
-//             alt="Window icon"
-//             width={16}
-//             height={16}
-//           />
-//           Examples
-//         </a>
-//         <a
-//           href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           <Image
-//             aria-hidden
-//             src="/globe.svg"
-//             alt="Globe icon"
-//             width={16}
-//             height={16}
-//           />
-//           Go to nextjs.org →
-//         </a>
-//       </footer>
-//     </div>
-//   );
+// <div className={styles.ctas}>
+// <a
+// className={styles.primary}
+// href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+// target="_blank"
+// rel="noopener noreferrer"
+// >
+// <Image
+// className={styles.logo}
+// src="/vercel.svg"
+// alt="Vercel logomark"
+// width={20}
+// height={20}
+// />
+// Deploy now
+// </a>
+// <a
+// href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+// target="_blank"
+// rel="noopener noreferrer"
+// className={styles.secondary}
+// >
+// Read our docs
+// </a>
+// </div>
+// </main>
+// <footer className={styles.footer}>
+// <a
+// href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+// target="_blank"
+// rel="noopener noreferrer"
+// >
+// <Image
+// aria-hidden
+// src="/file.svg"
+// alt="File icon"
+// width={16}
+// height={16}
+// />
+// Learn
+// </a>
+// <a
+// href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+// target="_blank"
+// rel="noopener noreferrer"
+// >
+// <Image
+// aria-hidden
+// src="/window.svg"
+// alt="Window icon"
+// width={16}
+// height={16}
+// />
+// Examples
+// </a>
+// <a
+// href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+// target="_blank"
+// rel="noopener noreferrer"
+// >
+// <Image
+// aria-hidden
+// src="/globe.svg"
+// alt="Globe icon"
+// width={16}
+// height={16}
+// />
+// Go to nextjs.org →
+// </a>
+// </footer>
+// </div>
+// );
 // }

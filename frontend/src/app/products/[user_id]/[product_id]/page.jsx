@@ -8,6 +8,7 @@ import Sitemap from "@/components/Sitemap";
 // import Detail from '../components/Detail';
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
