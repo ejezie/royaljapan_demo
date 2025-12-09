@@ -387,6 +387,17 @@ class CouponView(APIView):
         }
         return Response(response, status=status_code)
 
+class GetAllProductsView(APIView):
+    permission_classes = (AllowAny,)
+    def get(self, request):
+        products = Product.objects.all().values()
+        status_code = status.HTTP_200_OK
+        response = {
+            'products': list(products),
+            'status code': status.HTTP_200_OK,
+        }
+        return Response(response, status=status_code)
+
 class GetUserProduct(APIView):
     permission_classes = (AllowAny,)
     def get(self, request, id):

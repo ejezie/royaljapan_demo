@@ -2,6 +2,7 @@ from . import update
 from django.urls import path
 from royal.api.views import *
 urlpatterns = [
+    path('', GetAllProductsView.as_view()),
     path('login', UserLoginView.as_view()),
     path('admin/login', AdminLoginView.as_view()),
     path('register', UserRegisterView.as_view()),
