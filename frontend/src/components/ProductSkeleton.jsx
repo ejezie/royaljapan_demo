@@ -1,32 +1,31 @@
 const ProductSkeleton = () => {
   return (
-    <div className="flex w-full md:w-[32%] flex-col relative mb-[60px] animate-pulse">
-      {/* Ranking Badge Placeholder */}
-      <div className="absolute top-[-20px] left-[-12px] z-10 w-[67px] h-[100px] bg-gray-200 rounded-md"></div>
+    <div className="w-full md:w-[32%] mb-8 relative">
+      <div className="w-full bg-white rounded-2xl overflow-hidden border border-neutral-100 shadow-lg animate-pulse">
+        {/* Image Placeholder */}
+        <div className="relative aspect-[4/3] bg-gray-200"></div>
 
-      {/* Thumbnail Placeholder */}
-      <div className="w-full flex justify-center items-center mb-5 rounded-[20px] overflow-hidden h-[345px] bg-gray-200"></div>
+        {/* Content Placeholder */}
+        <div className="p-6 flex flex-col items-center">
+          {/* Badge Placeholder */}
+          <div className="w-24 h-6 bg-gray-200 rounded-full mb-4"></div>
 
-      {/* Title Placeholder */}
-      <div className="h-8 bg-gray-200 w-3/4 mb-2 rounded"></div>
+          {/* Package Placeholder */}
+          <div className="w-1/3 h-3 bg-gray-200 rounded mb-2"></div>
 
-      {/* Package Placeholder */}
-      <div className="h-6 bg-gray-200 w-1/2 mb-2 rounded"></div>
+          {/* Title Placeholder */}
+          <div className="w-3/4 h-6 bg-gray-200 rounded mb-3"></div>
 
-      {/* Description Placeholder */}
-      <div className="h-4 bg-gray-200 w-full mb-1 rounded"></div>
-      <div className="h-4 bg-gray-200 w-full mb-1 rounded"></div>
-      <div className="h-4 bg-gray-200 w-2/3 mb-5 rounded"></div>
+          {/* Description Placeholder */}
+          <div className="w-full h-3 bg-gray-200 rounded mb-1"></div>
+          <div className="w-2/3 h-3 bg-gray-200 rounded mb-5"></div>
 
-      {/* Price Section Placeholder */}
-      <div className="flex justify-between items-center mt-auto">
-        <div className="flex flex-col items-end gap-2">
-          <div className="w-[176px] h-[28px] bg-gray-200 rounded-[4px]"></div>
-          <div className="w-[100px] h-[30px] bg-gray-200 rounded"></div>
+          {/* Price Placeholder */}
+          <div className="w-1/2 h-8 bg-gray-200 rounded mb-6"></div>
+
+          {/* Button Placeholder */}
+          <div className="w-full h-10 bg-gray-200 rounded-xl"></div>
         </div>
-
-        {/* Action Button Placeholder */}
-        <div className="w-[207px] h-[65px] bg-gray-200 rounded-md"></div>
       </div>
     </div>
   );

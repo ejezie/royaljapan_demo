@@ -15,19 +15,16 @@ const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 function TopPage() {
   const { id } = useParams();
 
-  useEffect(() => {
-    localStorage.setItem("userID", id);
-  }, [id]);
-
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    getUserData(id);
-  }, [id]);
+    getData();
+  }, []);
 
-  const getUserData = (id) => {
+  const getData = () => {
     setLoading(true);
     setError(null);
     let config = {
@@ -36,7 +33,19 @@ function TopPage() {
     };
     axios(config)
       .then(async (response) => {
-        setProducts(response.data.products);
+        const productsData = response.data.products || [];
+        setProducts(productsData);
+        
+        // Extract seller_id from first product if available, or use id from params, or use localStorage
+        const sellerId = productsData.length > 0 
+          ? productsData[0].seller_id 
+          : id || localStorage.getItem("userID");
+        
+        if (sellerId) {
+          setUserId(sellerId);
+          localStorage.setItem("userID", sellerId);
+        }
+        
         setLoading(false);
       })
       .catch((err) => {
@@ -54,7 +63,7 @@ function TopPage() {
 
   return (
     <>
-      {/* <Header /> */}
+      <Header />
       <div className="product">
         <section className="top">
           <div className="top-img">
@@ -103,7 +112,7 @@ function TopPage() {
                   <Image
                     width={300}
                     height={300}
-                    src="/assets/images/site02.png"
+                    src="/assets/images/man.jpg"
                     alt=""
                   />
                 </div>
@@ -136,7 +145,7 @@ function TopPage() {
         </section>
         <section className="list">
           <div className="list-title">全ての商品</div>
-          <div className="contain">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-10">
             {loading ? (
               // Show skeletons while loading
               Array.from({ length: 6 }).map((_, index) => (
@@ -147,7 +156,7 @@ function TopPage() {
               <div className="w-full text-center py-20">
                 <p className="text-red-600 text-xl font-bold mb-4">{error}</p>
                 <button
-                  onClick={() => getUserData(id)}
+                  onClick={() => getData()}
                   className="px-6 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition"
                 >
                   Retry
@@ -157,10 +166,10 @@ function TopPage() {
               // Show products
               products.map((item, index) => (
                 <ProductCard
-                  key={index}
+                  key={item.id || index}
                   product={item}
                   index={index}
-                  userId={id}
+                  userId={item.seller_id}
                 />
               ))
             ) : (
